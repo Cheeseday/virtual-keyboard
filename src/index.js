@@ -1,12 +1,23 @@
-//variables
+//Variables
 let isCapsLockActive = false; 
-let language = 'english';
 const body = document.body;
 const alphabet = 'abcdefghijklmnopqrstuvwxyzйцукенгшўзхфывапролджэячсмітьбюё';
 const specialEnglishKeys = '`1234567890-=[]\\;\',./';
 const specialEnglishKeysWithShift = '~!@#$%^&*()_+{}|:"<>?';
 
-//create header of the page
+//Color palette
+//Basic
+const keyColor = '#394867';
+const specialKeyColor = '#212A3E';
+const activeColor = '#0E8388';
+const keyTextColor = '#FFFFFF';
+//Custom
+const customKeyColor = '#9AC5F4';
+const customSpecialKeyColor = '#A7ECEE';
+const customActiveColor = '#FFEEBB';
+const customKeyTextColor = '#000000';
+
+
 const header = document.createElement('header');
 const heading = document.createElement('h2');
 heading.textContent = 'Virtual Keyboard';
@@ -21,7 +32,7 @@ body.append(textarea);
 const keyboard = document.createElement('div');
 keyboard.className = 'container';
 
-//zero keyboard row
+//Zero keyboard row
 const zeroRowValues = '`1234567890-=';
 const zeroRowValuesBel = 'ё1234567890-=';
 const zeroRow = document.createElement('div');
@@ -31,7 +42,7 @@ insertKeys(zeroRow, zeroRowElements);
 const backspace = createSpecialKey('Backspace', 'backspace', 'Backspace');
 zeroRow.insertAdjacentElement('beforeend', backspace);
 
-//first keyboard row
+//First keyboard row
 const firstRowValues = 'qwertyuiop[]\\';
 const firstRowValuesBel = 'йцукенгшўзх\'\\';
 const firstRow = document.createElement('div');
@@ -43,17 +54,17 @@ firstRow.insertAdjacentElement('afterbegin', tab);
 const del = createSpecialKey('Del', 'del', 'Delete');
 firstRow.insertAdjacentElement('beforeend', del);
 
-//second keyboard row
+//Second keyboard row
 const secondRowValues = 'asdfghjkl;\'';
 const secondRowValuesBel = 'фывапролджэ';
 const secondRow = document.createElement('div');
 secondRow.className = 'row';
 const secondRowElements = createKeys(secondRowValues);
 insertKeys(secondRow, secondRowElements);
-const capsLock = createSpecialKey('Caps Lock', 'caps-lock')
+const capsLock = createSpecialKey('Caps Lock', 'caps-lock', 'CapsLock');
 secondRow.insertAdjacentElement('afterbegin', capsLock);
 secondRow.insertAdjacentElement('beforeend', createSpecialKey('Enter', 'enter', 'Enter'));
-//third keyboard row
+//Third keyboard row
 const thirdRowValues = 'zxcvbnm,./';
 const thirdRowValuesBel = 'ячсмітьбю.';
 const thirdRow = document.createElement('div');
@@ -62,7 +73,7 @@ const thirdRowElements = createKeys(thirdRowValues);
 insertKeys(thirdRow, thirdRowElements);
 thirdRow.insertAdjacentElement('afterbegin', createSpecialKey('Shift', 'shift', 'ShiftLeft'));
 thirdRow.insertAdjacentElement('beforeend', createSpecialKey('Shift', 'shift', 'ShiftRight'));
-//fourth keyboard row
+//Fourth keyboard row
 const fourthRow = document.createElement('div');
 fourthRow.className = 'row';
 insertKeys(fourthRow, createKeys(' ', 'space'));
@@ -79,7 +90,7 @@ fourthRow.insertAdjacentElement('beforeend', createSpecialKey('\u23F4', 'pg-left
 fourthRow.insertAdjacentElement('beforeend', pageUpDownBlock);
 fourthRow.insertAdjacentElement('beforeend', createSpecialKey('\u23F5', 'pg-right', 'ArrowRight'));
 
-//insert rows into keyboard
+//Insert rows into keyboard
 keyboard.insertAdjacentElement('beforeend', zeroRow);
 keyboard.insertAdjacentElement('beforeend', firstRow);
 keyboard.insertAdjacentElement('beforeend', secondRow);
@@ -89,14 +100,27 @@ keyboard.insertAdjacentElement('beforeend', fourthRow);
 body.insertAdjacentElement('beforeend', keyboard);
 
 //Change language
-let langShortcut = document.createElement('p');
-langShortcut.textContent = 'A keyboard shortcut for switching a language: Ctrl + Shift';
+const langShortcut = document.createElement('p');
+langShortcut.textContent = 'A keyboard shortcut for switching a language: Shift + Alt';
 body.insertAdjacentElement('beforeend', langShortcut);
+//Change palette
+const colorPaletteShortcut = document.createElement('p');
+colorPaletteShortcut.textContent = 'A keyboard shortcut for switching the color palette: Ctrl + Shift';
+body.insertAdjacentElement('beforeend', colorPaletteShortcut);
+
+//Keyboard for windows
+const description = document.createElement('p');
+description.textContent = 'Keyboard was created for OS Windows';
+body.insertAdjacentElement('beforeend', description);
 
 const allSimpleElements = document.querySelectorAll('.simple-key');
 const allSpecialElements = document.querySelectorAll('.special-key');
 const allElements = document.querySelectorAll('.key');
+
 addEventCodeProperty(allSimpleElements);
+//
+setRememberLanguage(localStorage.getItem('language'));
+setNewPalette(localStorage.getItem('palette'));
 
 function createKeys(string, additionalClass) {
     const symbols = string.split('');
@@ -127,7 +151,7 @@ function insertKeys(parent, children) {
     }
 }
 
-function changeElementLanguage(elements, valueStr) {
+function changeLanguage(elements, valueStr) {
     const valueArray = valueStr.split('');
     for(let i = 0; i < elements.length; i++) {
         elements[i].textContent = valueArray[i];
@@ -176,12 +200,92 @@ function createMap(elements, elementNames) {
     return map;
 }
 
+function setNewPalette(palette) {
+    if(!palette || palette === 'basic') {  
+        document.documentElement.style.setProperty('--key-color', keyColor);
+        document.documentElement.style.setProperty('--special-key-color', specialKeyColor);
+        document.documentElement.style.setProperty('--active-color', activeColor);
+        document.documentElement.style.setProperty('--key-text-color', keyTextColor);
+        heading.style.setProperty('color', specialKeyColor);
+    } else if(palette === 'custom') {
+        document.documentElement.style.setProperty('--key-color', customKeyColor);
+        document.documentElement.style.setProperty('--special-key-color', customSpecialKeyColor);
+        document.documentElement.style.setProperty('--active-color', customActiveColor);
+        document.documentElement.style.setProperty('--key-text-color', customKeyTextColor);
+        heading.style.setProperty('color', customKeyColor);
+        localStorage.setItem('palette', 'custom');
+    }
+}
+
+function capsElements() {
+    if(isCapsLockActive) {
+        changeLettersCase(allSimpleElements, 'lower');
+        capsLock.classList.remove('active');
+        isCapsLockActive = false;
+    } else {
+        changeLettersCase(allSimpleElements, 'upper');
+        capsLock.classList.add('active');
+        isCapsLockActive = true;
+    }
+}
+
+function shiftKeyboard() {
+    const array = specialEnglishKeys.split('');
+    const shiftedArray = specialEnglishKeysWithShift.split('');
+    const specialForBelarusian = '\'.\\';
+    for(let key of allSimpleElements) {
+        if(localStorage.getItem('language') === 'belarusian' && specialForBelarusian.includes(key.textContent)) {
+            if(key.textContent === '\'') key.textContent = '\'';
+            if(key.textContent === '.') key.textContent = ',';
+            if(key.textContent === '\\') key.textContent = '/';
+        } else if(alphabet.includes(key.textContent)) {
+            key.textContent = key.textContent.toUpperCase();
+        } else if(specialEnglishKeys.includes(key.textContent)) {
+            key.textContent = shiftedArray[array.indexOf(key.textContent)];
+        }
+    }
+}
+
+function unshiftKeyboard() {
+    const array = specialEnglishKeys.split('');
+    const shiftedArray = specialEnglishKeysWithShift.split('');
+    const specialForBelarusian = '\',/';
+    for(let key of allSimpleElements) {
+        if(localStorage.getItem('language') === 'belarusian' && specialForBelarusian.includes(key.textContent)) {
+            if(key.textContent === '\'') key.textContent = '\'';
+            if(key.textContent === ',') key.textContent = '.';
+            if(key.textContent === '/') key.textContent = '\\';
+        } else if(alphabet.includes(key.textContent.toLowerCase())) {
+            key.textContent = key.textContent.toLowerCase();
+        } else if(specialEnglishKeysWithShift.includes(key.textContent)) {
+            key.textContent = array[shiftedArray.indexOf(key.textContent)];
+        }
+    }
+}
+
+function setRememberLanguage(language) {
+    if(!language || language === 'english') {
+        changeLanguage(zeroRowElements, zeroRowValues);
+        changeLanguage(firstRowElements, firstRowValues);
+        changeLanguage(secondRowElements, secondRowValues);
+        changeLanguage(thirdRowElements, thirdRowValues);
+        changeLanguage(zeroRowElements, zeroRowValues);
+    } else if(language === 'belarusian') {
+        changeLanguage(zeroRowElements, zeroRowValuesBel);
+        changeLanguage(firstRowElements, firstRowValuesBel);
+        changeLanguage(secondRowElements, secondRowValuesBel);
+        changeLanguage(thirdRowElements, thirdRowValuesBel);
+        changeLanguage(zeroRowElements, zeroRowValuesBel);
+    }
+}
+
 document.addEventListener('keydown', function(event) {
+    event.preventDefault();
     //Display active keyboard element
     for(const elem of allSimpleElements) {
         if(elem.dataset.eventCode && elem.dataset.eventCode === event.code) {
             elem.classList.add('active');
-            textarea.textContent += event.key;
+            textarea.textContent += elem.innerText;
         }   
     }
     for(const elem of allSpecialElements) {
@@ -190,92 +294,128 @@ document.addEventListener('keydown', function(event) {
         }   
     }
     //if (event.altKey && (event.ctrlKey || event.metaKey)) {
-    if(event.altKey || event.code === 'Space') {
-        event.preventDefault();
+    if(event.code === 'Space') {
+        textarea.textContent += ' ';
     }
     if(event.code === 'Tab') {
-        event.preventDefault();
         textarea.textContent += '    ';
     }
     if(event.code === 'Enter') {
         textarea.textContent += '\n';
     }
     if(event.code === 'Backspace') {
-        event.preventDefault();
         textarea.textContent = textarea.textContent.slice(0, -1);
     }
     if(event.code === 'ArrowUp') {
-        event.preventDefault();
         textarea.textContent += '\u23F6';
     }
     if(event.code === 'ArrowDown') {
-        event.preventDefault();
         textarea.textContent += '\u23F7';
     }
     if(event.code === 'ArrowLeft') {
-        event.preventDefault();
         textarea.textContent += '\u23F4';
     }
     if(event.code === 'ArrowRight') {
-        event.preventDefault();
         textarea.textContent += '\u23F5';
     }
-    if(event.shiftKey && event.ctrlKey) {
-      if(language === 'english') {
-        changeElementLanguage(zeroRowElements, zeroRowValuesBel);
-        changeElementLanguage(firstRowElements, firstRowValuesBel);
-        changeElementLanguage(secondRowElements, secondRowValuesBel);
-        changeElementLanguage(thirdRowElements, thirdRowValuesBel);
-        changeElementLanguage(zeroRowElements, zeroRowValuesBel);
-        language = 'belarusian';
-      } else if(language === 'belarusian') {
-        changeElementLanguage(zeroRowElements, zeroRowValues);
-        changeElementLanguage(firstRowElements, firstRowValues);
-        changeElementLanguage(secondRowElements, secondRowValues);
-        changeElementLanguage(thirdRowElements, thirdRowValues);
-        changeElementLanguage(zeroRowElements, zeroRowValues);
-        language = 'english';
-      }
-    }
     if(event.code === 'CapsLock') {
-        if(isCapsLockActive) {
-            changeLettersCase(allSimpleElements, 'lower');
-            capsLock.classList.remove('active');
-            isCapsLockActive = false;
-        } else {
-            changeLettersCase(allSimpleElements, 'upper');
-            capsLock.classList.add('active');
-            isCapsLockActive = true;
-        }
+        capsElements();
     }
     if(event.shiftKey) {
-        const array = specialEnglishKeys.split('');
-        const shiftedArray = specialEnglishKeysWithShift.split('');
-        for(let key of allSimpleElements) {
-            if(alphabet.includes(key.textContent)) {
-                key.textContent = key.textContent.toUpperCase();
-            } else if(specialEnglishKeys.includes(key.textContent)) {
-                key.textContent = shiftedArray[array.indexOf(key.textContent)];
-            }
+        shiftKeyboard();
+    }
+    //Change palette colors
+    if(event.ctrlKey && event.shiftKey) {
+        if(localStorage.getItem('palette') === 'basic') {
+            setNewPalette('custom');
+            localStorage.setItem('palette', 'custom');
+        } else {
+            setNewPalette('basic');
+            localStorage.setItem('palette', 'basic');
+        }
+    }
+    //Switch keyboard language
+    if(event.shiftKey && event.altKey) {
+        if(localStorage.getItem('language') === 'english' || localStorage.getItem('language') === undefined) {
+            localStorage.setItem('language', 'belarusian');
+            setRememberLanguage(localStorage.getItem('language'));
+        } else if(localStorage.getItem('language') === 'belarusian') {
+            localStorage.setItem('language', 'english');
+            setRememberLanguage(localStorage.getItem('language'));
         }
     }
 });
 
 document.addEventListener('keyup', function(event) {
     for(let elem of allElements){
-        if(elem.dataset.eventCode && elem.dataset.eventCode === event.code) {
+        if(elem.dataset.eventCode && elem.dataset.eventCode === event.code && elem.dataset.eventCode !== 'CapsLock') {
             elem.classList.remove('active');
         }   
     }
     if(event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-        const array = specialEnglishKeys.split('');
-        const shiftedArray = specialEnglishKeysWithShift.split('');
-        for(let key of allSimpleElements) {
-            if(alphabet.includes(key.textContent.toLowerCase())) {
-                key.textContent = key.textContent.toLowerCase();
-            } else if(specialEnglishKeysWithShift.includes(key.textContent)) {
-                key.textContent = array[shiftedArray.indexOf(key.textContent)];
-            }
-        }
+        unshiftKeyboard();
+    }
+});
+
+document.addEventListener('mousedown', function(event) {
+    const target = event.target.dataset.eventCode;
+    for(const elem of allSimpleElements) {
+        if(elem.dataset.eventCode && elem.dataset.eventCode === target) {
+            elem.classList.add('active');
+            textarea.textContent += elem.innerText;
+        }   
+    }
+    for(const elem of allSpecialElements) {
+        if(elem.dataset.eventCode && elem.dataset.eventCode === target) {
+            elem.classList.add('active');
+        }   
+    }
+    switch(target) {
+        case 'Space':
+            textarea.textContent += ' ';
+            break;
+        case 'Tab':
+            textarea.textContent += '    ';
+            break;
+        case 'Enter':
+            textarea.textContent += '\n';
+            break;
+        case 'Backspace':
+            textarea.textContent = textarea.textContent.slice(0, -1);
+            break;
+        case 'ArrowUp':
+            textarea.textContent += '\u23F6';
+            break;
+        case 'ArrowDown':
+            textarea.textContent += '\u23F7';
+            break;
+        case 'ArrowLeft':
+            textarea.textContent += '\u23F4';
+            break;
+        case 'ArrowRight':
+            textarea.textContent += '\u23F5';
+            break;
+        case 'CapsLock':
+            capsElements();
+            break;
+        case 'ShiftRight':
+            shiftKeyboard();
+            break; 
+        case 'ShiftLeft':
+            shiftKeyboard();
+            break; 
+        default: '';       
+    }
+});
+
+document.addEventListener('mouseup', function(event) {
+    const target = event.target.dataset.eventCode;
+    for(const elem of allElements){
+        if(elem.dataset.eventCode && elem.dataset.eventCode === target && elem.dataset.eventCode !== 'CapsLock') {
+            elem.classList.remove('active');
+        }   
+    }
+    if(target === 'ShiftLeft' || target === 'ShiftRight') {
+        unshiftKeyboard();
     }
 });

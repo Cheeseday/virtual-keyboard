@@ -28,7 +28,7 @@ p {
 }
 .textarea {
     width: 55vw;
-    height: 40vh;
+    height: 37vh;
     margin-bottom: 8px;
 }
 .container {
@@ -66,6 +66,9 @@ p {
 }
 .key:hover {
     background-color: color-mix(in srgb, var(--key-text-color) 39%, var(--key-color));
+}
+.key:active {
+    background-color: var(--active-color);
 }
 .special-key {
     width: 45px;
