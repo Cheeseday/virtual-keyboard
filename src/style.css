@@ -1,0 +1,117 @@
+/* Variables */
+/* Colors */
+:root {
+    --key-color: #394867;
+    --special-key-color: #212A3E;
+    --active-color: #0E8388;
+    --key-text-color: #FFFFFF;
+    --shadow-color: rgb(75, 93, 106);
+}
+
+/* Main element settings */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #F1EFEF;
+}
+p {
+    margin: 8px 0;
+}
+.name {
+    margin: 10px auto;
+
+    font-size: 32px;
+    color: var(--special-key-color);
+}
+.textarea {
+    width: 55vw;
+    height: 40vh;
+    margin-bottom: 8px;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 54vw;
+    padding: 4px;
+    border: 2px solid #ababab;
+    border-radius: 4px;
+}
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+.key {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+    margin: 4px 2px;
+    border-radius: 4px;
+
+    color: var(--key-text-color);
+    background-color: var(--key-color);
+
+    -webkit-box-shadow: 2px 2px 5px 0px var(--shadow-color);
+    -moz-box-shadow: 2px 2px 5px 0px var(--shadow-color);
+    box-shadow: 2px 2px 5px 0px var(--shadow-color);
+
+    transition: all 0.4s ease-out;
+}
+.key:hover {
+    background-color: color-mix(in srgb, var(--key-text-color) 39%, var(--key-color));
+}
+.special-key {
+    width: 45px;
+
+    background-color: var(--special-key-color);
+}
+.special-key:hover {
+    background-color: color-mix(in srgb, var(--key-text-color) 30%, var(--special-key-color));
+}
+
+/* Special key settings */
+.caps-lock, 
+.enter {
+    width: 90px;
+}
+.shift {
+    width: 112px;
+}
+.page-up-down {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    height: 40px;
+    margin: 4px 2px;
+}
+.pg-up,
+.pg-down {
+    height: 19px;
+    margin: 0;
+}
+.space {
+    width: 286px;
+}
+.backspace {
+    width: 97px;
+}
+
+/* Active element settings */
+.active {
+    background-color: var(--active-color);
+
+    transition: all 0.1s ease-in-out;
+}
+.active:hover {
+    background-color: var(--active-color);
+    
+    transition: all 0.1s ease-in-out;
+}
