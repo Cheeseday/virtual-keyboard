@@ -18,7 +18,9 @@ Start the application:
 ```sh
     npx parcel src/index.html
 ```
-    or
+
+or
+
 ```sh
     npm start
 ``` 
