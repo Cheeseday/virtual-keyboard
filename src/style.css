@@ -27,7 +27,7 @@ p {
     color: var(--special-key-color);
 }
 .textarea {
-    width: 55vw;
+    width: 762px;
     height: 37vh;
     margin-bottom: 8px;
 }
@@ -36,7 +36,7 @@ p {
     flex-direction: column;
     justify-content: center;
 
-    width: 54vw;
+    width: 756px;
     padding: 4px;
     border: 2px solid #ababab;
     border-radius: 4px;
@@ -85,7 +85,7 @@ p {
     width: 90px;
 }
 .shift {
-    width: 112px;
+    width: 116px;
 }
 .page-up-down {
     display: flex;
@@ -101,7 +101,7 @@ p {
     margin: 0;
 }
 .space {
-    width: 286px;
+    width: 303px;
 }
 .backspace {
     width: 97px;
