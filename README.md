@@ -1,5 +1,7 @@
 ## Virtual keyboard
 
+### [Here you can see implementation](https://cheeseday.github.io/virtual-keyboard/src/index.html)
+
 <kbd>![screenshot](assets/program_work.gif)</kbd>
 
 ### Building a web app:
@@ -24,8 +26,6 @@ or
 ```sh
     npm start
 ``` 
-
-### [Here you can see implementation](https://cheeseday.github.io/virtual-keyboard/src/index.html)
 
 ### Implemented functionality:
 
