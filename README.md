@@ -4,13 +4,26 @@
 
 ### Building a web app:
 
+Clone repository:
 ```sh
     git clone https://github.com/Cheeseday/virtual-keyboard.git
+```
 
+Install dependencies:
+```sh
     npm install
+```
 
+Start the application:
+```sh
     npx parcel src/index.html
 ```
+    or
+```sh
+    npm start
+``` 
+
+### [Here you can see implementation](https://cheeseday.github.io/virtual-keyboard/src/index.html)
 
 ### Implemented functionality:
 
