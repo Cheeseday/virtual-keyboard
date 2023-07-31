@@ -87,16 +87,10 @@ p {
 .key:focus::before {  
     transform: scale(1);
 }
-.key:hover {
-    background-color: color-mix(in srgb, var(--key-text-color) 30%, var(--key-color));
-}
 .special-key {
     width: 45px;
 
     background-color: var(--special-key-color);
-}
-.special-key:hover {
-    background-color: color-mix(in srgb, var(--key-text-color) 20%, var(--special-key-color));
 }
 
 /* Special key settings */
@@ -137,4 +131,15 @@ p {
 }
 .activeCaps {
     background-color: var(--active-color);
+}
+
+/* Hovers */
+@media(hover: hover) {
+    .key:hover {
+        background-color: color-mix(in srgb, var(--key-text-color) 30%, var(--key-color));
+    }
+    
+    .special-key:hover {
+        background-color: color-mix(in srgb, var(--key-text-color) 20%, var(--special-key-color));
+    }
 }
