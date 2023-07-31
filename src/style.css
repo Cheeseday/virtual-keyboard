@@ -6,7 +6,6 @@
     --active-color: #0E8388;
     --key-text-color: #FFFFFF;
     --shadow-color: rgb(75, 93, 106);
-    /* --customActiveColor: #FFEEBB; */
 }
 
 /* Main element settings */
@@ -28,15 +27,13 @@ p {
     color: var(--special-key-color);
 }
 .textarea {
-    width: 762px;
-    height: 37vh;
     margin-bottom: 8px;
 }
 .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
+    
     width: 756px;
     padding: 4px;
     border: 2px solid #ababab;
@@ -90,17 +87,17 @@ p {
 .key:focus::before {  
     transform: scale(1);
 }
-/* .key:hover {
-    background-color: color-mix(in srgb, var(--key-text-color) 39%, var(--key-color));
-} */
+.key:hover {
+    background-color: color-mix(in srgb, var(--key-text-color) 30%, var(--key-color));
+}
 .special-key {
     width: 45px;
 
     background-color: var(--special-key-color);
 }
-/* .special-key:hover {
-    background-color: color-mix(in srgb, var(--key-text-color) 30%, var(--special-key-color));
-} */
+.special-key:hover {
+    background-color: color-mix(in srgb, var(--key-text-color) 20%, var(--special-key-color));
+}
 
 /* Special key settings */
 .caps-lock, 
@@ -132,16 +129,12 @@ p {
 
 /* Active element settings */
 .active {
-    background-color: var(--active-color);
+    -webkit-box-shadow: 0.5px 0.5px 1.5px 0px var(--shadow-color);
+    -moz-box-shadow: 0.5px 0.5px 1.5px 0px var(--shadow-color);
+    box-shadow: 0.5px 0.5px 1.5px 0px var(--shadow-color);
 
-    transition: all 0.15s ease-in-out;
+    transition: all 0.15s ease-out;
 }
-.active:hover {
-    background-color: var(--active-color);
-    
-    transition: all 0.15s ease-in-out;
-}
-
 .activeCaps {
     background-color: var(--active-color);
 }
