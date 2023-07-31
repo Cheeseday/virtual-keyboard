@@ -224,7 +224,6 @@ function capsElements() {
         isCapsLockActive = false;
     } else {
         changeLettersCase(allSimpleElements, 'upper');
-        capsLock.classList.add('active');
         isCapsLockActive = true;
     }
 }
@@ -361,13 +360,7 @@ document.addEventListener('mousedown', function(event) {
     const target = event.target.dataset.eventCode;
     for(const elem of allSimpleElements) {
         if(elem.dataset.eventCode && elem.dataset.eventCode === target) {
-            elem.classList.add('active');
             textarea.textContent += elem.innerText;
-        }   
-    }
-    for(const elem of allSpecialElements) {
-        if(elem.dataset.eventCode && elem.dataset.eventCode === target) {
-            elem.classList.add('active');
         }   
     }
     switch(target) {
@@ -410,10 +403,10 @@ document.addEventListener('mousedown', function(event) {
 
 document.addEventListener('mouseup', function(event) {
     const target = event.target.dataset.eventCode;
-    for(const elem of allElements){
-        if(elem.dataset.eventCode && elem.dataset.eventCode === target && elem.dataset.eventCode !== 'CapsLock') {
-            elem.classList.remove('active');
-        }   
+    if(target === 'CapsLock' && isCapsLockActive === true) {
+        event.target.classList.add('activeCaps');
+    } else if (target === 'CapsLock' && isCapsLockActive === false) {
+        event.target.classList.remove('activeCaps');
     }
     if(target === 'ShiftLeft' || target === 'ShiftRight') {
         unshiftKeyboard();
