@@ -1,27 +1,16 @@
-//Variables
+import { setPalette } from './components/setPalette';
+import { addEventCodeProperty } from './components/addEventCodeProperty';
+import { shiftKeyboard, unshiftKeyboard, deleteHandler, backspaceHandler, capsHandler,insertSymbol, moveCursor } from './components/handlers';
+import { createKeys, createSpecialKey, insertKeys } from './components/keyOperations';
+import { setLanguage, zeroRowValues, firstRowValues, secondRowValues, thirdRowValues } from './components/setLanguage';
+
 let isCapsLockActive = false; 
 const body = document.body;
-const alphabet = 'abcdefghijklmnopqrstuvwxyzйцукенгшўзхфывапролджэячсмітьбюё';
-const specialEnglishKeys = '`1234567890-=[]\\;\',./';
-const specialEnglishKeysWithShift = '~!@#$%^&*()_+{}|:"<>?';
-
-//Color palette
-//Basic
-const keyColor = '#394867';
-const specialKeyColor = '#212A3E';
-const activeColor = '#0E8388';
-const keyTextColor = '#FFFFFF';
-//Custom
-const customKeyColor = '#9AC5F4';
-const customSpecialKeyColor = '#A7ECEE';
-const customActiveColor = '#FFEEBB';
-const customKeyTextColor = '#000000';
-
 
 const header = document.createElement('header');
 const heading = document.createElement('h2');
 heading.textContent = 'Virtual Keyboard';
-heading.className = 'name';
+heading.className = 'heading';
 header.insertAdjacentElement('afterbegin', heading);
 body.insertAdjacentElement('afterbegin', header);
 
@@ -35,8 +24,6 @@ const keyboard = document.createElement('div');
 keyboard.className = 'container';
 
 //Zero keyboard row
-const zeroRowValues = '`1234567890-=';
-const zeroRowValuesBel = 'ё1234567890-=';
 const zeroRow = document.createElement('div');
 zeroRow.className = 'row';
 const zeroRowElements = createKeys(zeroRowValues); 
@@ -45,8 +32,6 @@ const backspace = createSpecialKey('Backspace', 'backspace', 'Backspace');
 zeroRow.insertAdjacentElement('beforeend', backspace);
 
 //First keyboard row
-const firstRowValues = 'qwertyuiop[]\\';
-const firstRowValuesBel = 'йцукенгшўзх\'\\';
 const firstRow = document.createElement('div');
 firstRow.className = 'row';
 const firstRowElements = createKeys(firstRowValues);
@@ -57,8 +42,6 @@ const del = createSpecialKey('Del', 'del', 'Delete');
 firstRow.insertAdjacentElement('beforeend', del);
 
 //Second keyboard row
-const secondRowValues = 'asdfghjkl;\'';
-const secondRowValuesBel = 'фывапролджэ';
 const secondRow = document.createElement('div');
 secondRow.className = 'row';
 const secondRowElements = createKeys(secondRowValues);
@@ -66,15 +49,15 @@ insertKeys(secondRow, secondRowElements);
 const capsLock = createSpecialKey('Caps Lock', 'caps-lock', 'CapsLock');
 secondRow.insertAdjacentElement('afterbegin', capsLock);
 secondRow.insertAdjacentElement('beforeend', createSpecialKey('Enter', 'enter', 'Enter'));
+
 //Third keyboard row
-const thirdRowValues = 'zxcvbnm,./';
-const thirdRowValuesBel = 'ячсмітьбю.';
 const thirdRow = document.createElement('div');
 thirdRow.className = 'row';
 const thirdRowElements = createKeys(thirdRowValues);
 insertKeys(thirdRow, thirdRowElements);
 thirdRow.insertAdjacentElement('afterbegin', createSpecialKey('Shift', 'shift', 'ShiftLeft'));
 thirdRow.insertAdjacentElement('beforeend', createSpecialKey('Shift', 'shift', 'ShiftRight'));
+
 //Fourth keyboard row
 const fourthRow = document.createElement('div');
 fourthRow.className = 'row';
@@ -120,193 +103,10 @@ const allSpecialElements = document.querySelectorAll('.special-key');
 const allElements = document.querySelectorAll('.key');
 
 addEventCodeProperty(allSimpleElements);
-//
-setRememberLanguage(localStorage.getItem('language'));
-setNewPalette(localStorage.getItem('palette'));
 
-function createKeys(string, additionalClass) {
-    const symbols = string.split('');
-    let createdElements = [];
-    for(let i = 0; i < symbols.length; i++) {
-        const element = document.createElement('div');
-        element.classList.add('key', 'simple-key');
-        if(additionalClass) {
-            element.classList.add(`${additionalClass}`);
-        }
-        element.textContent = symbols[i];
-        createdElements.push(element);
-    }
-    return createdElements;
-}
+setLanguage(localStorage.getItem('language'));
 
-function createSpecialKey(value, elementClass, eventCode) {
-    const element = document.createElement('span');
-    element.classList.add('key', 'special-key', `${elementClass}`);
-    element.textContent = value;   
-    element.dataset.eventCode = eventCode;
-    return element;
-}
-
-function insertKeys(parent, children) {
-    for(let i = 0; i < children.length; i++) {
-        parent.insertAdjacentElement('beforeend', children[i]);
-    }
-}
-
-function changeLanguage(elements, valueStr) {
-    const valueArray = valueStr.split('');
-    for(let i = 0; i < elements.length; i++) {
-        elements[i].textContent = valueArray[i];
-    }
-}
-
-function changeLettersCase(elements, register) {
-    for(let i = 0; i < elements.length; i++) {
-        const hasElement = alphabet.includes(elements[i].textContent.toLowerCase());
-        if(hasElement && register === 'upper'){
-            const value = elements[i].textContent.toUpperCase();
-            elements[i].textContent = value;
-        } else if(hasElement && register === 'lower') {
-            const value = elements[i].textContent.toLowerCase();
-            elements[i].textContent = value;
-        }
-    }
-}
-
-function addEventCodeProperty(elements) {
-    const englishAlphabet = 'qwertyuiopasdfghjklzxcvbnm';
-    const digits = '0123456789';
-    const specialSymbols = ['`', '-', '=', '[', ']', '\\', ';', '\'', ',', '.', '/', ' '];
-    const specialSymbolsNames = ['Backquote', 'Minus', 'Equal', 'BracketLeft', 'BracketRight', 
-                                    'Backslash', 'Semicolon', 'Quote', 'Comma', 'Period', 'Slash', 'Space'];
-    const specialSymbolsMap = createMap(specialSymbols, specialSymbolsNames);
-    for(const element of elements) {
-        if(englishAlphabet.includes(element.textContent)) {
-            const value = `Key${element.textContent.toUpperCase()}`;
-            element.dataset.eventCode = value;
-        } else if(digits.includes(element.textContent)) {
-            const value = `Digit${element.textContent.toUpperCase()}`;
-            element.dataset.eventCode = value;
-        } else if(specialSymbolsMap.has(element.textContent)) {
-            const value = specialSymbolsMap.get(element.textContent);
-            element.dataset.eventCode = value;
-        }
-    }
-}
-
-function createMap(elements, elementNames) {
-    const map = new Map();
-    for (let i = 0; i < elements.length; i++) {
-        map.set(elements[i], elementNames[i]);
-    }
-    return map;
-}
-
-function setNewPalette(palette) {
-    if(!palette || palette === 'basic') {  
-        document.documentElement.style.setProperty('--key-color', keyColor);
-        document.documentElement.style.setProperty('--special-key-color', specialKeyColor);
-        document.documentElement.style.setProperty('--active-color', activeColor);
-        document.documentElement.style.setProperty('--key-text-color', keyTextColor);
-        heading.style.setProperty('color', specialKeyColor);
-    } else if(palette === 'custom') {
-        document.documentElement.style.setProperty('--key-color', customKeyColor);
-        document.documentElement.style.setProperty('--special-key-color', customSpecialKeyColor);
-        document.documentElement.style.setProperty('--active-color', customActiveColor);
-        document.documentElement.style.setProperty('--key-text-color', customKeyTextColor);
-        heading.style.setProperty('color', customKeyColor);
-        localStorage.setItem('palette', 'custom');
-    }
-}
-
-function capsHandler() {
-    if(isCapsLockActive) {
-        changeLettersCase(allSimpleElements, 'lower');
-        capsLock.classList.remove('active');
-        isCapsLockActive = false;
-    } else {
-        changeLettersCase(allSimpleElements, 'upper');
-        isCapsLockActive = true;
-    }
-}
-
-function shiftKeyboard() {
-    const array = specialEnglishKeys.split('');
-    const shiftedArray = specialEnglishKeysWithShift.split('');
-    const specialForBelarusian = '\'.\\';
-    for(let key of allSimpleElements) {
-        if(localStorage.getItem('language') === 'belarusian' && specialForBelarusian.includes(key.textContent)) {
-            if(key.textContent === '\'') key.textContent = '\'';
-            if(key.textContent === '.') key.textContent = ',';
-            if(key.textContent === '\\') key.textContent = '/';
-        } else if(alphabet.includes(key.textContent)) {
-            key.textContent = key.textContent.toUpperCase();
-        } else if(specialEnglishKeys.includes(key.textContent)) {
-            key.textContent = shiftedArray[array.indexOf(key.textContent)];
-        }
-    }
-}
-
-function unshiftKeyboard() {
-    const array = specialEnglishKeys.split('');
-    const shiftedArray = specialEnglishKeysWithShift.split('');
-    const specialForBelarusian = '\',/';
-    for(let key of allSimpleElements) {
-        if(localStorage.getItem('language') === 'belarusian' && specialForBelarusian.includes(key.textContent)) {
-            if(key.textContent === '\'') key.textContent = '\'';
-            if(key.textContent === ',') key.textContent = '.';
-            if(key.textContent === '/') key.textContent = '\\';
-        } else if(alphabet.includes(key.textContent.toLowerCase())) {
-            key.textContent = key.textContent.toLowerCase();
-        } else if(specialEnglishKeysWithShift.includes(key.textContent)) {
-            key.textContent = array[shiftedArray.indexOf(key.textContent)];
-        }
-    }
-}
-
-function deleteHandler(object) {
-    const cursorPosition = object.selectionStart;
-    if(cursorPosition === object.textContent.length) {
-        return;
-    }
-    const prevString = object.textContent.substring(0, cursorPosition);
-    const pastString = object.textContent.substring(cursorPosition + 1);
-    textarea.textContent = prevString + pastString;
-    textarea.selectionStart = cursorPosition;
-    return;
-}
-
-function backspaceHandler(object) {
-    const cursorPosition = object.selectionStart;
-    if(cursorPosition === 0) {
-        return;
-    }
-    const prevString = object.textContent.substring(0, cursorPosition - 1);
-    const pastString = object.textContent.substring(cursorPosition);
-    textarea.textContent = prevString + pastString;
-    textarea.selectionStart = cursorPosition - 1;
-    return;
-}
-
-function insertSymbol(object, symbol) {
-    const cursorPosition = object.selectionStart;
-    const prevString = object.textContent.substring(0, cursorPosition);
-    const pastString = object.textContent.substring(cursorPosition);
-    textarea.textContent = `${prevString}${symbol}${pastString}`;
-    textarea.selectionStart = cursorPosition + symbol.length;
-    return;
-}
-
-function moveCursor(object, side) {
-    const cursorPosition = object.selectionStart;
-    if(side === 'left') {
-        object.selectionStart = cursorPosition - 1;
-        object.selectionEnd = cursorPosition - 1;
-    } else if(side === 'right') {
-        object.selectionStart = cursorPosition + 1;
-    }
-    return;
-}
+setPalette(localStorage.getItem('palette'));
 
 function specialKeysInteraction(eventCode) {
     switch(eventCode) {
@@ -338,29 +138,14 @@ function specialKeysInteraction(eventCode) {
             moveCursor(textarea, 'right');
             break;
         case 'CapsLock':
-            capsHandler();
+            capsHandler(allSimpleElements, isCapsLockActive);
+            isCapsLockActive = !isCapsLockActive;
             break;
         case 'ShiftLeft':
         case 'ShiftRight':    
-            shiftKeyboard();
+            shiftKeyboard(allSimpleElements);
             break; 
         default: ''; 
-    }
-}
-
-function setRememberLanguage(language) {
-    if(!language || language === 'english') {
-        changeLanguage(zeroRowElements, zeroRowValues);
-        changeLanguage(firstRowElements, firstRowValues);
-        changeLanguage(secondRowElements, secondRowValues);
-        changeLanguage(thirdRowElements, thirdRowValues);
-        changeLanguage(zeroRowElements, zeroRowValues);
-    } else if(language === 'belarusian') {
-        changeLanguage(zeroRowElements, zeroRowValuesBel);
-        changeLanguage(firstRowElements, firstRowValuesBel);
-        changeLanguage(secondRowElements, secondRowValuesBel);
-        changeLanguage(thirdRowElements, thirdRowValuesBel);
-        changeLanguage(zeroRowElements, zeroRowValuesBel);
     }
 }
 
@@ -378,15 +163,15 @@ document.addEventListener('keydown', function(event) {
             elem.classList.add('active');
         }   
     }
-    //if (event.altKey && (event.ctrlKey || event.metaKey)) {
+    //if (event.altKey && (event.ctrlKey || event.metaKey)) {}
     specialKeysInteraction(event.code);
     //Change palette colors
     if(event.ctrlKey && event.shiftKey) {
         if(localStorage.getItem('palette') === 'basic') {
-            setNewPalette('custom');
+            setPalette('custom');
             localStorage.setItem('palette', 'custom');
         } else {
-            setNewPalette('basic');
+            setPalette('basic');
             localStorage.setItem('palette', 'basic');
         }
     }
@@ -394,10 +179,10 @@ document.addEventListener('keydown', function(event) {
     if(event.shiftKey && event.altKey) {
         if(localStorage.getItem('language') === 'english' || localStorage.getItem('language') === undefined) {
             localStorage.setItem('language', 'belarusian');
-            setRememberLanguage(localStorage.getItem('language'));
+            setLanguage(localStorage.getItem('language'));
         } else if(localStorage.getItem('language') === 'belarusian') {
             localStorage.setItem('language', 'english');
-            setRememberLanguage(localStorage.getItem('language'));
+            setLanguage(localStorage.getItem('language'));
         }
     }
 });
@@ -409,11 +194,13 @@ document.addEventListener('keyup', function(event) {
         } 
         if(elem.dataset.eventCode === 'CapsLock' && isCapsLockActive === true) {
             elem.classList.add('activeCaps');
+            elem.classList.add('active');
         } else if (elem.dataset.eventCode === 'CapsLock' && isCapsLockActive === false) {
             elem.classList.remove('activeCaps');
+            elem.classList.remove('active');
         }
         if(event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-            unshiftKeyboard();
+            unshiftKeyboard(allSimpleElements);
         }
     }
 });
@@ -436,6 +223,6 @@ document.addEventListener('pointerup', function(event) {
         event.target.classList.remove('activeCaps');
     }
     if(target === 'ShiftLeft' || target === 'ShiftRight') {
-        unshiftKeyboard();
+        unshiftKeyboard(allSimpleElements);
     }
 });

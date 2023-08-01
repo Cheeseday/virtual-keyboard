@@ -2,7 +2,7 @@
   "name": "virtual-keyboard",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel",
+    "start": "npx parcel src/index.html",
     "build": "parcel build"
   },
   "devDependencies": {
